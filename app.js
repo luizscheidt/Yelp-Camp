@@ -24,10 +24,18 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.get("/newcamp", async (req, res) => {
-  const camp = new Campground({ title: "Casa Vó", location: "São Miguel" });
-  await camp.save();
-  res.send(camp);
+app.get("/campgrounds", async (req, res) => {
+  const camps = await Campground.find({});
+  res.render("campgrounds/index", { camps });
+});
+
+app.get("/campgrounds/:id", async (req, res) => {
+  const camp = await Campground.findById(req.params.id);
+  res.render("campgrounds/show", { camp });
+});
+
+app.get("/campgrounds/new", (req, res) => {
+  res.render("campgrounds/new");
 });
 
 app.listen(3000, () => {
