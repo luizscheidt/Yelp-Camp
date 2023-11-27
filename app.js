@@ -31,6 +31,10 @@ app.get("/campgrounds", async (req, res) => {
   res.render("campgrounds/index", { campgrounds });
 });
 
+app.get("/", (req, res) => {
+  res.send("Home");
+});
+
 app.get("/campgrounds/new", (req, res) => {
   res.render("campgrounds/new");
 });
