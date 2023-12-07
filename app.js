@@ -4,6 +4,7 @@ const app = express();
 const mongoose = require("mongoose");
 const ejsMate = require("ejs-mate");
 const Joi = require("joi");
+const {campgroundSchema} = require("./schemas");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
@@ -29,6 +30,20 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 
+const validateCampground = (req, res, next) => {
+  const {error} = campgroundSchema.validate(req.body);
+  if (error) {
+    const message = error.details.map((element) => element.message).join(",");
+    throw new ExpressError(message, 400);
+  } else {
+    next();
+  }
+};
+
+app.get("/", (req, res) => {
+  res.send("Home");
+});
+
 app.get(
   "/campgrounds",
   wrapAsync(async (req, res) => {
@@ -37,34 +52,17 @@ app.get(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send("Home");
-});
-
 app.get("/campgrounds/new", (req, res) => {
   res.render("campgrounds/new");
 });
 
 app.post(
   "/campgrounds",
+  validateCampground,
   wrapAsync(async (req, res, next) => {
     // if (!req.body.campground)
     //   throw new ExpressError("Invalid Campground Data", 400);
-    const campgroundSchema = Joi.object({
-      campground: Joi.object({
-        title: Joi.string().required(),
-        location: Joi.string().required(),
-        description: Joi.string().required(),
-        image: Joi.string().required(),
-        price: Joi.number().required().min(0),
-      }).required(),
-    });
-    const {error} = campgroundSchema.validate(req.body);
-    if (error) {
-      const message = error.details.map((element) => element.message).join(",");
-      throw new ExpressError(message, 400);
-    }
-    console.log(result);
+
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
@@ -89,6 +87,7 @@ app.get(
 
 app.patch(
   "/campgrounds/:id",
+  validateCampground,
   wrapAsync(async (req, res) => {
     const {id} = req.params;
     const campground = await Campground.findByIdAndUpdate(id, {
