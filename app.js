@@ -51,7 +51,7 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new localStrategy(User.authenticate));
+passport.use(new localStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -61,8 +61,6 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
-
-("");
 
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
