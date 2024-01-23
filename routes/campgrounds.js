@@ -1,20 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
-const {campgroundSchema} = require("../schemas");
-const ExpressError = require("../utils/ExpressError");
 const Campground = require("../models/campground");
-const {isLoggedIn} = require("../middleware");
-
-const validateCampground = (req, res, next) => {
-  const {error} = campgroundSchema.validate(req.body);
-  if (error) {
-    const message = error.details.map((element) => element.message).join(",");
-    throw new ExpressError(message, 400);
-  } else {
-    next();
-  }
-};
+const {isLoggedIn, validateCampground, isAuthor} = require("../middleware");
 
 router.get(
   "/",
@@ -61,6 +49,7 @@ router.get(
 router.get(
   "/:id/edit",
   isLoggedIn,
+  isAuthor,
   wrapAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
@@ -74,6 +63,7 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
+  isAuthor,
   validateCampground,
   wrapAsync(async (req, res) => {
     const {id} = req.params;
@@ -88,6 +78,7 @@ router.put(
 router.delete(
   "/:id",
   isLoggedIn,
+  isAuthor,
   wrapAsync(async (req, res) => {
     const {id} = req.params;
     await Campground.findByIdAndDelete(id);
