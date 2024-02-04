@@ -49,6 +49,7 @@ const renderEditForm = async (req, res) => {
 
 const updateCampground = async (req, res) => {
   const {id} = req.params;
+  console.log(req.body);
   const campground = await Campground.findByIdAndUpdate(id, {
     ...req.body.campground,
   });
