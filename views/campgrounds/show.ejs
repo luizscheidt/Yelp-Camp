@@ -5,7 +5,6 @@
   <div class="row">
     <div class="col-6">
       <div id="map" style="width: 400px; height: 300px"></div>
-
       <div id="campgroundCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <% campground.images.forEach((img, index) => { %>
@@ -135,7 +134,8 @@
 </div>
 
 <script>
-  const mapToken = "<%- process.env.MAPBOX_TOKEN %>";
+  const mapToken = "<%-process.env.MAPBOX_TOKEN%>";
+  const campground = <%- JSON.stringify(campground) %>;
 </script>
 
 <script src="/javascript/showMap.js"></script>
