@@ -6,7 +6,7 @@ const {cloudinary} = require("../cloudinary");
 
 const index = async (req, res) => {
   if (req.query.search) {
-    const regex = new RegExp(escapeRegex(req.query.search));
+    const regex = new RegExp(escapeRegex(req.query.search), "gi");
     const campgrounds = await Campground.find({title: regex});
     console.log(campgrounds);
     res.render("campgrounds/index", {campgrounds});
