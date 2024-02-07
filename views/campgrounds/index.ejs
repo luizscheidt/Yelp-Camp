@@ -4,9 +4,19 @@
   <div id="cluster-map"></div>
 
   <h1>All Campgrounds</h1>
-  <div>
-    <a href="/campgrounds/new">Create campground</a>
-  </div>
+
+  <form action="/campgrounds" method="GET" class="form-inline">
+    <div class="form-group">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search for a campground"
+      />
+      <input type="submit" value="Search" class="btn btn-default" />
+    </div>
+  </form>
+
   <ul>
     <% for (let camp of campgrounds) {%>
     <div class="card mb-3">
