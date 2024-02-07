@@ -5,8 +5,15 @@ const geocoder = mbxGeocoding({accessToken: mapBoxToken});
 const {cloudinary} = require("../cloudinary");
 
 const index = async (req, res) => {
-  const campgrounds = await Campground.find({});
-  res.render("campgrounds/index", {campgrounds});
+  if (req.query.search) {
+    const regex = new RegExp(escapeRegex(req.query.search));
+    const campgrounds = await Campground.find({title: regex});
+    console.log(campgrounds);
+    res.render("campgrounds/index", {campgrounds});
+  } else {
+    const campgrounds = await Campground.find({});
+    res.render("campgrounds/index", {campgrounds});
+  }
 };
 
 const renderNewForm = (req, res) => {
@@ -88,6 +95,10 @@ const deleteCampground = async (req, res) => {
   req.flash("success", "The campground has been deleted");
   res.redirect("/campgrounds");
 };
+
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = {
   index,

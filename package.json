@@ -21,6 +21,7 @@
     "express-session": "^1.17.3",
     "flash": "^1.1.0",
     "joi": "^17.11.0",
+    "locus": "^2.0.4",
     "method-override": "^3.0.0",
     "mongoose": "^8.0.1",
     "multer": "^1.4.5-lts.1",
