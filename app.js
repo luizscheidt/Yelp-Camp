@@ -20,7 +20,7 @@ const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const MongoDBStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
 
 const dbUrl = "mongodb://127.0.0.1:27017/yelp-camp";
 
@@ -41,10 +41,12 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize());
 
-const store = new MongoDBStore({
-  url: dbUrl,
-  secret,
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
+  crypto: {
+    secret: "Secreto",
+  },
 });
 
 store.on("error", function (e) {
