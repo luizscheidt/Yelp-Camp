@@ -22,9 +22,14 @@ const reviewRoutes = require("./routes/reviews");
 
 const MongoStore = require("connect-mongo");
 
-const dbUrl = "mongodb://127.0.0.1:27017/yelp-camp";
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp";
 
-mongoose.connect(dbUrl);
+mongoose.connect(dbUrl, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Error connecting to database"));
