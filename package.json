@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "18.13.0"
+    "node": "18.0.0"
   },
   "name": "yelpcamp",
   "version": "1.0.0",
